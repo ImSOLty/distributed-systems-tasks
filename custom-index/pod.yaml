@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod_nginx_custom
+  namespace: ignashov
+spec:
+  containers:
+  - name: nginx_custom
+    image: nginx_custom_index
+    imagePullPolicy: IfNotPresent
+    ports:
+      - containerPort: 80
+        protocol: TCP

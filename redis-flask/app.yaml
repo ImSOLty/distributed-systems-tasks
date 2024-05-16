@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-app
+  namespace: ignashov
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flask-app
+  template:
+    metadata:
+      labels:
+        app: flask-app
+    spec:
+      containers:
+      - name: flask-app
+        image: imsolty/flask-app-test:1.0.2
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: flask-port
+          containerPort: 5000
+          protocol: TCP
+---
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: redis-app
+  namespace: ignashov
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: redis-app
+  template:
+    metadata:
+      labels:
+        app: redis-app
+    spec:
+      containers:
+      - name: redis-app
+        image: redis:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: redis-port
+          containerPort: 6379
+          protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: redis-app
+  name: redis-app-service
+  namespace: ignashov
+spec:
+  ports:
+  - name: redis-app
+    port: 6379
+    targetPort: redis-port
+    protocol: TCP
+  selector:
+    app: redis-app
+  type: ClusterIP
