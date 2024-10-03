@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  web:
+    build: "./runner/"
+    ports:
+      - "5000:5000"
+    depends_on:
+      - redis
+    environment:
+      - REDIS_HOST=rediswhatever
+      - REDIS_PORT=6379
+  redis:
+    hostname: rediswhatever
+    image: redis

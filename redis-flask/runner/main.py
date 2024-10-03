@@ -2,10 +2,12 @@ import redis
 from flask import Flask, request
 from faker import Faker
 
+import os
+
 app = Flask(__name__)
 fake = Faker()
 
-r = redis.Redis(host='redis-app-service.ignashov.svc.cluster.local', port=6379, decode_responses=True)
+r = redis.Redis(host=os.getenv("REDIS_HOST"), port=os.getenv("REDIS_PORT"), decode_responses=True)
 
 
 @app.route("/", methods=['POST', 'GET'])
