@@ -16,10 +16,10 @@ spec:
     storage: 512Mi
   accessModes:
   - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
+  persistentVolumeReclaimPolicy: Delete
   storageClassName: local-storage-ignashov
   local:
-    path: /mnt
+    path: /mnt/ignashov/redis-data
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -91,10 +91,6 @@ spec:
       labels:
         app: redis-app
     spec:
-      initContainers:
-      - name: init-redis-storage
-        image: busybox
-        command: ['sh', '-c', 'mkdir -p /mnt']
       containers:
       - name: redis-app
         image: redis:bookworm
