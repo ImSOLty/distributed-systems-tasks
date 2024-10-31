@@ -1,34 +1,3 @@
-kind: StorageClass
-apiVersion: storage.k8s.io/v1
-metadata:
-  name: local-storage-ignashov
-  namespace: ignashov
-provisioner: kubernetes.io/no-provisioner
-volumeBindingMode: WaitForFirstConsumer
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: pv-for-redis
-  namespace: ignashov
-spec:
-  capacity:
-    storage: 512Mi
-  accessModes:
-  - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Delete
-  storageClassName: local-storage-ignashov
-  local:
-    path: /mnt/ignashov/redis-data
-  nodeAffinity:
-    required:
-      nodeSelectorTerms:
-        - matchExpressions:
-            - key: kubernetes.io/hostname
-              operator: In
-              values:
-                - worker-192.168.0.5
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -96,7 +65,7 @@ spec:
       name: redis-storage
     spec:
       accessModes: ["ReadWriteOnce"]
-      storageClassName: local-storage-ignashov
+      storageClassName: local-path
       resources:
         requests:
           storage: 512Mi
